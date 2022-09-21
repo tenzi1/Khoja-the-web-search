@@ -4,7 +4,10 @@ from django.http import HttpResponse
 
 # Create your views here.
 def index(request):
-    return HttpResponse(" Home page....<a href='/khoja/about/'>About Page</a>")
+    context = {
+        'boldmessage': 'Hello World!!!'
+    }
+    return render(request, 'khoja/index.html', context)
 
 def about(request):
-    return HttpResponse("Here is the about page... <a href='/'>Home Page</a>")
+    return render(request, 'khoja/about.html')

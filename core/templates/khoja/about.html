@@ -1,0 +1,17 @@
+
+{% extends 'khoja/index.html'%}
+{% load static %}
+
+{% block content %}
+<div>
+    <a href="/khoja/">Back to Home</a>
+    <img src="{% static 'images/curosity.jpg '%}" alt="Curious Mind">
+</div>
+<div>
+    <img src="{{ MEDIA_URL }}about.jpeg" alt="some img">
+</div>
+<div>
+<img src="{% get_media_prefix %}about.png " alt="File 2"> 
+
+</div>
+{% endblock %}
