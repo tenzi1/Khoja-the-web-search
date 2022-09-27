@@ -1,0 +1,14 @@
+{% if categories %}
+<ul>
+    {% for c in categories %}
+        {% if c == current_category %}
+      <li><strong> {{ c.name }}</strong></li>
+        {% else %}
+        <li><a href="{% url 'khoja:show_category' c.slug %}">{{ c.name}}</a></li>
+       {% endif %}
+    {% endfor %}
+</ul>
+{% else %}
+    There are no categories present.
+{% endif %}
+

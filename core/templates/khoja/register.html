@@ -1,0 +1,23 @@
+{% extends 'khoja/base.html' %}
+{% load static %}
+
+{% block title %}
+    Register
+{% endblock%}
+
+{% block body %}
+    <h1>Register for Khoja</h1>
+    {% if registered %}
+    Khoja says: <strong>Thank you for registering!</strong>
+    <a href="{% url 'khoja:index' %}">Return to the homepage.</a><br>
+    {% else %}
+    Khoja says: <strong>register here!</strong> <br>
+    <form id='user_form' method="post" action="{%url 'khoja:register' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ profile_form.as_p }}
+        <input type="submit" name="submit" value="Register">
+
+    </form>
+    {% endif %}
+{% endblock%}

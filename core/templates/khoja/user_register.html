@@ -1,0 +1,23 @@
+{% extends 'khoja/base.html' %}
+
+{% block title %}
+User Registration
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'khoja:user_register' %}" method="post" novalidate>
+        {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            {{field.errors}}
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.help_text }}
+            <br>
+            <br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

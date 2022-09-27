@@ -1,41 +1,24 @@
+{% extends 'khoja/base.html' %}
 
-<!DOCTYPE html>
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khoja Homepage</title>
-</head>
-<body>
+
+
+    {% block body %}
     <h1>Khoja all your curosity...</h1>
     
     <div>
       <br>  hey there partner! <br /> 
     </div>
-    <div>
+    <!-- <div>
         {% if categories %}
         
         <ul>
             {% for category in categories %}
-                <li><a href="/khoja/category/{{ category.slug }}">{{ category.name}}</a></li>
+                <li><a href="{% url 'khoja:show_category' category.slug %}">{{ category.name}}</a></li>
             {% endfor %}
         </ul>
         {% else %}
             <strong>There are no categories present.</strong>
         {% endif %}
-    </div>
-
-    
-    {% block content %}
-    <div>
-        <a href="/khoja/add_category">Add Category</a>
-    </div>
-    <div>
-    <a href="/khoja/about">About</a>
-    <img src="{% static 'images/curosity.jpg' %}" alt="Picture of curosity">
-    {% endblock %}
-</div>
-</body>
-</html>
+    </div> -->
+    {% endblock%}

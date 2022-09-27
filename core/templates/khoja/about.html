@@ -1,10 +1,13 @@
 
-{% extends 'khoja/index.html'%}
+{% extends 'khoja/base.html'%}
 {% load static %}
 
-{% block content %}
+{% block title %}
+    About
+{% endblock %}
+{% block body %}
 <div>
-    <a href="/khoja/">Back to Home</a>
+    <a href="{% url 'khoja:index' %}">Back to Home</a>
     <img src="{% static 'images/curosity.jpg '%}" alt="Curious Mind">
 </div>
 <div>
