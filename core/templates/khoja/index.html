@@ -6,9 +6,13 @@
     {% block body %}
     <h1>Khoja all your curosity...</h1>
     
+    {% if user.is_authenticated %}
+    Welcome to Khoja ,{{ user.username }}
+    {% else %}
     <div>
       <br>  hey there partner! <br /> 
     </div>
+    {% endif %}
     <!-- <div>
         {% if categories %}
         

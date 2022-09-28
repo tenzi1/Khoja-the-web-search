@@ -27,9 +27,17 @@
     <hr>
     <div>
         <ul>
-            <li><a href="{% url 'khoja:add_category' %}">Add a New Category</a></li>
+           
             <li><a href="{% url 'khoja:about' %}">About</a></li>
             <li><a href="{% url 'khoja:index' %}">Index</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'khoja:add_category' %}">Add a New Category</a></li>
+            <li><a href="{% url 'khoja:logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'khoja:register' %}">Register</a></li>
+            <li><a href="{% url 'khoja:login' %}">Login</a></li>
+            {% endif %}
+            
         </ul>
     </div>
 </body>
