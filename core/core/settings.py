@@ -135,4 +135,15 @@ MEDIA_URL  = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = 'khoja:login'
+#Settings for registration package
+#__________________________________________________________________________
+#If True, the user will be automatically logged in after registering.
+REGISTRATION_AUTO_LOGIN = True
+
+#The URL that Django redirects users to after logging in 
+LOGIN_REDIRECT_URL = 'khoja:index'
+
+#The page users are directed to if they are not logged in.
+LOGIN_URL = 'auth_login'
+
+ACCOUNT_ACTIVATION_DAYS = 1
