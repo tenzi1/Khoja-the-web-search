@@ -6,11 +6,12 @@
     About
 {% endblock %}
 {% block body %}
-<div>
+<div class="jumbotron p-4">
     <a href="{% url 'khoja:index' %}">Back to Home</a>
-    <img src="{% static 'images/curosity.jpg '%}" alt="Curious Mind">
+   
 </div>
 <div>
+    <img src="{% static 'images/curosity.jpg '%}" alt="Curious Mind">
     <img src="{{ MEDIA_URL }}about.jpeg" alt="some img">
 </div>
 <div>

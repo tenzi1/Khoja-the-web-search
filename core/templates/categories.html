@@ -1,10 +1,11 @@
 {% if categories %}
-<ul>
+<ul class="nav-item">
     {% for c in categories %}
         {% if c == current_category %}
-      <li><strong> {{ c.name }}</strong></li>
+      <li class="active nav-link"> {{ c.name }}</li>
         {% else %}
-        <li><a href="{% url 'khoja:show_category' c.slug %}">{{ c.name}}</a></li>
+        
+        <li class="nav-link"> <span data-feather="archive"></span><a href="{% url 'khoja:show_category' c.slug %}">{{ c.name}}</a></li>
        {% endif %}
     {% endfor %}
 </ul>

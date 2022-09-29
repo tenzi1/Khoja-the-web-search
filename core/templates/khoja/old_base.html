@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+
+{% load categories_tag %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Khoja - 
+        {% block title %}
+            How to Search with Khoja!
+        {% endblock %}
+    </title>
+</head>
+<body>
+    <div>
+        {% block body%}
+        {% endblock %}
+    </div>
+    <div>
+        {% block sidebar %}
+          {% get_category_list category%}
+        {% endblock %}
+    </div>
+    <hr>
+    <div>
+        <ul>
+           
+            <li><a href="{% url 'khoja:about' %}">About</a></li>
+            <li><a href="{% url 'khoja:index' %}">Index</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'khoja:add_category' %}">Add a New Category</a></li>
+            <li><a href="{% url 'auth_logout' %}?next={% url 'khoja:index' %}">Logout</a></li>
+            <li><a href="{% url 'auth_password_change' %}">Change Password</a></li>
+            {% else %}
+            <li><a href="{% url 'registration_register' %}">Register</a></li>
+            <li><a href="{% url 'auth_login' %}">Login</a></li>
+            {% endif %}
+            
+        </ul>
+    </div>
+</body>
+</html>
