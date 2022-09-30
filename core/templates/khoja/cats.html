@@ -1,0 +1,7 @@
+{% if cats %}
+    {%for c in cats %}
+        {{c.name }}
+    {% endfor %}
+{% else %}
+There are no categories present.
+{% endif %}

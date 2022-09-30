@@ -1,7 +1,7 @@
 {% if categories %}
 <ul class="nav-item">
     {% for c in categories %}
-        {% if c == current_category %}
+        {% if c == act_cat %}
       <li class="active nav-link"> {{ c.name }}</li>
         {% else %}
         

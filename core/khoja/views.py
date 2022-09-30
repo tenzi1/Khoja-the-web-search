@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from khoja.serpapi_search import run_query
+
 from .models import Category, Page
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
@@ -183,4 +185,21 @@ def add_page(request, category_name_slug):
 
     return render(request, 'khoja/add_page.html', context)
 
-    
+
+# view implementing search functionality
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+        context = {
+            'result_list':result_list, 'query':query
+        } 
+    else:
+        context = {
+                'result_list':result_list,
+        }
+    return render(request, 'khoja/search.html', context)
+
+
