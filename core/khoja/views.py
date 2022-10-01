@@ -1,13 +1,16 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
+from typing import Type
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+from django.views import View
+from django.utils.decorators import method_decorator
 from khoja.serpapi_search import run_query
 
-from .models import Category, Page
+from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 #counter implementing session data
@@ -144,12 +147,24 @@ def show_category(request, category_name_slug):
     context = {}
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context['pages'] =  pages
         context['category'] = category
     except Category.DoesNotExist:
         context['category'] = None
         context['pages'] = None
+
+    #implementing search functionality
+    if request.method == 'POST':
+        query = request.POST.get('query')
+        if query:
+            result_list = run_query(query)
+            context['result_list'] = result_list
+            context['query'] = query
+    else:
+        context['result_list'] = None
+    
+
 
     return render(request, 'khoja/category.html', context)
 
@@ -187,19 +202,121 @@ def add_page(request, category_name_slug):
 
 
 # view implementing search functionality
-def search(request):
-    result_list = []
+# def search(request):
+#     result_list = []
+#     if request.method == 'POST':
+#         query = request.POST['query'].strip()
+#         if query:
+#             result_list = run_query(query)
+#         context = {
+#             'result_list':result_list, 'query':query
+#         } 
+#     else:
+#         context = {
+#                 'result_list':result_list,
+#         }
+#     return render(request, 'khoja/search.html', context)
+
+
+#view implementing click count functionality
+def goto_url(request, page_id):
+    try:
+        page = Page.objects.get(pk=page_id)
+    except Page.DoesNotExist:
+        return redirect(reverse('index'))
+    page.views = page.views + 1
+    page.save()
+    return redirect(page.url)
+    
+
+
+#view implementing addition profile registration
+@login_required
+def register_profile(request):
     if request.method == 'POST':
-        query = request.POST['query'].strip()
-        if query:
-            result_list = run_query(query)
-        context = {
-            'result_list':result_list, 'query':query
-        } 
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+
+            return redirect(reverse('khoja:index'))
+        else:
+            print(form.errors)
     else:
+        form = UserProfileForm()
+    return render(request, 'khoja/profile_registration.html', {'form':form})
+
+#user profile
+def profile(request):
+    
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.data)
+        user_form = UserForm(request.data)
+        if profile_form.is_valid() and user_form.is_valid():
+            profile_form.save()
+            user_form.save()
+    else:
+        profile_form = UserProfileForm()
+        user_form = UserForm()
+    context = {
+        'profile_form': profile_form ,
+        'user_form': user_form,
+    }
+    return render(request, 'khoja/profile.html', context)
+
+class ProfileView(View):
+    def get_user_details(self, username):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+    
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
+        form = UserProfileForm({'website': user_profile.website,
+                                'picture': user_profile.picture})
+        return (user, user_profile, form)
+
+    @method_decorator(login_required)
+    def get(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('khoja:index'))
+
         context = {
-                'result_list':result_list,
+            'user_profile':user_profile,
+            'selected_user': user,
+            'form': form
         }
-    return render(request, 'khoja/search.html', context)
+        return render(request, 'khoja/profile.html', context)
+    
+    @method_decorator(login_required)
+    def post(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('khoja:index'))
 
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
 
+        if form.is_valid():
+            form.save()
+            return redirect('khoja:profile', user.username)
+        else:
+            print(form.errors)
+        context = {
+                        'user_profile': user_profile,
+                        'selected_user': user,
+                        'form': form
+        }
+        return render(request, 'khoja/profile.html', context)
+
+# view to implement viewing of other user profile
+class ListProfileView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        profiles = UserProfile.objects.all()
+        print(profiles)
+        return render(request, 'khoja/list_profiles.html',
+        {'user_profile_list': profiles})

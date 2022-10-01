@@ -18,7 +18,11 @@
         {% if pages %}
             <ul class="list-group">
                 {% for page in pages %}
-                <li class="list-group-item"><a href="{{ page.url }}">{{ page.title }}</a></li>
+                <li class="list-group-item"><a href="{% url 'khoja:goto' page.id %}">
+                    {{ page.title }}
+                    {% if page.views > 1 %} ({{ page.views }} views) {% elif page.views == 1 %} ({{ page.views }}view) {% endif %}
+                </a></li>
+                
                 {% endfor %}
             </ul>
         {% else %}
@@ -33,5 +37,35 @@
         The specified category does not exist.
     {% endif %}
 </div>
+
+<!-- Search functionality -->
+{% if user.is_authenticated %}
+<div>
+    <form action="{% url 'khoja:show_category' category.slug %}" id="user-form" method="post" class="form-inline">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" size="50" name="query" id="query" class="form-control" value="{{query}}">
+
+        </div>
+        <button class="btn btn-primary" type="submit" name="submit">Search</button>
+    </form>
+</div>
+<div>
+    {% if result_list %}
+        <h2>Results</h2>
+        <div class="list-group">
+            {% for result in result_list %}
+                <h3 class="list-group-item-heading">
+                    <a href="{{ result.link }}">
+                        {{ result.title|safe|escape }}
+                    </a>
+                </h3>
+                <p class="list-group-item-text">
+                    {{ result.summary|safe|escape}}
+                </p>
+            {% endfor %}
+        </div>
+{% endif %}
+{% endif %}
 {% endblock%}
     
