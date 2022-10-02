@@ -9,12 +9,15 @@
 {% endblock %}
 
 {% block body %}
-<div class="jumbotron">
-    <h1>Current Pages</h1>
-</div>
+
 
 <div class="container" >
-    {% if category %}
+    <div class="jumbotron">
+        {% if category %}
+        <h1>{{ category.name }}</h1> <br>
+       <strong id="like_count">{{ category.likes }} </strong> likes {% if user.is_authenticated %} <button class="btn btn-primary" id="like_btn" data-categoryid="{{ category.id}}"> Like Category </button> {% endif %}
+    </div>
+    
         {% if pages %}
             <ul class="list-group">
                 {% for page in pages %}

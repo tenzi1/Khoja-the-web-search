@@ -12,7 +12,7 @@ from khoja.serpapi_search import run_query
 
 from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
-
+from .helper import get_category_list
 #counter implementing session data
 def visitor_cookie_handler(request):
     visits = request.session.get('visits', 1)
@@ -320,3 +320,35 @@ class ListProfileView(View):
         print(profiles)
         return render(request, 'khoja/list_profiles.html',
         {'user_profile_list': profiles})
+
+
+# view implementing like functionality for category
+class LikeCategoryView(View):
+    @method_decorator(login_required)
+    def get(self, request, category_slug):
+        category_id = request.GET['category_id']
+        try:
+            category = Category.objects.get(id=int(category_id))
+        except Category.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+        
+        category.likes = category.likes + 1
+        category.save()
+
+        return HttpResponse(category.likes)
+
+#view for implementing search help for category
+class CategorySuggestionView(View):
+    def get(self, request):
+        if 'suggestion' in request.GET:
+            suggestion = request.GET['suggestion']
+        else:
+            suggestion = ''
+        category_list = get_category_list(max_results=8, starts_with=suggestion)
+
+        if len(category_list) == 0:
+            category_list = Category.objects.order_by('-likes')
+        
+        return render(request, 'categories.html', {'categories':category_list})

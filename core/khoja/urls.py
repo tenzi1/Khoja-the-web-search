@@ -18,4 +18,6 @@ urlpatterns = [
     path('profile/<slug:username>/', views.ProfileView.as_view(), name='profile'),
     path('register_profile', views.register_profile, name='register_profile'),
     path('profiles/', views.ListProfileView.as_view(), name='list_profiles'),
+    path('category/<slug:category_slug>/khoja/like_category/', views.LikeCategoryView.as_view(), name='like_category'),
+    path('suggest/', views.CategorySuggestionView.as_view(), name='suggest'),
 ]

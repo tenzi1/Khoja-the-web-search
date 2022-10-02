@@ -4,3 +4,5 @@ pycache/
 db.sqlite3
 __pycache__
 env.py
+populate_khoja.py
+*.key

@@ -10,6 +10,11 @@
     <a href="{% url 'khoja:index' %}">Back to Home</a>
    
 </div>
+
+<button class="btn btn-secondary" onclick=" alert('You click the button')">Click me - I run vanila JavaScript</button>
+<br>
+<button class="btn btn-primary" id="about-btn">Another button</button>
+<br>
 <div>
     <img src="{% static 'images/curosity.jpg '%}" alt="Curious Mind">
     <img src="{{ MEDIA_URL }}about.jpeg" alt="some img">
